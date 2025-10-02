@@ -44,6 +44,7 @@ npm run build
 - `GET /api/patients`, `POST /api/patients`, `GET /api/patients/:id`, `PATCH /api/patients/:id`
 - `GET /api/surgeries`, `POST /api/surgeries`, `GET /api/surgeries/:id`, `PATCH /api/surgeries/:id`
 
+
 ## Notes
 - This project is intentionally lightweight so you can adapt it to Expo/React Native Web or a different backend later.
 - For healthcare production, add Auth (JWT/SSO), RBAC, audit logs, encryption, and stricter validation (Zod + server-side checks).
