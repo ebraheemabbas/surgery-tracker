@@ -12,10 +12,6 @@ function Layout({children}){
     <div className="container">
       <header className="topbar">
         <Link to="/" className="brand">Surgery Dashboard</Link>
-        <nav className="nav">
-          <Link to="/surgeries/new" className="btn ghost">Log New Surgery</Link>
-          <Link to="/patients/new" className="btn ghost">Add New Patient</Link>
-        </nav>
       </header>
       <main>{children}</main>
     </div>
