@@ -1,0 +1,63 @@
+
+:root {
+  --bg: #f3f4f6;
+  --card: #ffffff;
+  --muted: #6b7280;
+  --text: #111827;
+  --primary: #3b82f6;
+  --chip-emergency: #fca5a5;
+  --chip-elective: #bfdbfe;
+  --chip-success: #bbf7d0;
+  --chip-failed: #fecaca;
+  --shadow: 0 10px 24px rgba(0,0,0,0.08);
+  --radius: 14px;
+}
+
+*{ box-sizing: border-box; }
+html,body,#root{ height:100%; }
+body{ margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); }
+
+.container{ max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+.topbar{ display:flex; align-items:center; justify-content:space-between; margin-bottom: 16px; }
+.brand{ font-size: 28px; font-weight: 800; text-decoration:none; color: var(--text); }
+.nav{ display:flex; gap: 12px; }
+
+.btn{ border:none; padding: 10px 16px; border-radius: 10px; font-weight: 600; cursor:pointer; }
+.btn.primary{ background: var(--primary); color: white; }
+.btn.ghost{ background: #eef2ff; color: #1f2937; text-decoration:none; display:inline-block; }
+.btn.block{ width: 100%; }
+
+.grid-cards{ display:grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 16px 0 24px; }
+.card{ background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; }
+.card h3{ margin:0; font-size:14px; color: var(--muted); }
+.card .big{ font-size: 28px; font-weight: 800; margin-top: 8px; }
+
+.section-title{ font-size:20px; font-weight: 800; margin: 18px 0; }
+
+.layout{ display:grid; grid-template-columns: 1fr 280px; gap: 20px; }
+.stack{ display:flex; flex-direction:column; gap: 12px; }
+.surgery-item{ background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px; }
+.surgery-title{ font-weight: 800; margin-bottom: 6px; }
+.row{ display:flex; gap: 10px; align-items:center; flex-wrap:wrap; }
+.muted{ color: var(--muted); }
+
+.chip{ font-size: 12px; padding: 4px 10px; border-radius: 999px; font-weight: 700; }
+.chip.emergency{ background: var(--chip-emergency); }
+.chip.elective{ background: var(--chip-elective); }
+.chip.successful{ background: var(--chip-success); }
+.chip.failed{ background: var(--chip-failed); }
+
+.sidebar .card{ background: #eef2ff; }
+
+.form{ display:grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form .field{ display:flex; flex-direction:column; gap:6px; }
+.form label{ font-weight: 700; }
+.form input, .form select, .form textarea{ padding: 12px; border-radius: 10px; border: 1px solid #e5e7eb; background: #f9fafb; }
+.form textarea{ min-height: 100px; resize: vertical; }
+.form .actions{ grid-column: 1 / -1; display:flex; gap: 16px; margin-top: 10px; }
+@media (max-width: 900px){
+  .grid-cards{ grid-template-columns: repeat(2,1fr); }
+  .layout{ grid-template-columns: 1fr; }
+  .form{ grid-template-columns: 1fr; }
+}
