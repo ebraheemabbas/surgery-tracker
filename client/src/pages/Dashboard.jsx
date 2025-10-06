@@ -1,5 +1,6 @@
-
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext.jsx'
 import { api } from '../components/API'
 import StatCard from '../components/StatCard'
 import QuickActions from '../components/QuickActions'
@@ -8,6 +9,19 @@ export default function Dashboard(){
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
+
+  const handleLogout = async () => {
+    try {
+      await logout()          // calls /api/auth/logout and clears auth state
+      navigate('/login')      // redirect to login
+    } catch (e) {
+      console.error('Logout failed:', e)
+      alert('Logout failed. Please try again.')
+    }
+  }
 
   async function load(){
     setLoading(true)
@@ -27,7 +41,22 @@ export default function Dashboard(){
 
   return (
     <div>
-      <p className="muted">Overview of your surgical practice</p>
+      {/* Page header with Logout on the right */}
+      <div className="row" style={{alignItems:'center', marginBottom: '12px'}}>
+        <p className="muted" style={{margin: 0}}>
+          Overview of your surgical practice{user?.email ? ` — ${user.email}` : ''}
+        </p>
+        <div style={{marginLeft: 'auto'}}>
+          <button
+            onClick={handleLogout}
+            className="bg-yellow-700 h-5"
+            title="Log out"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+
       <div className="grid-cards">
         <StatCard label="Total Patients" value={stats.totalPatients} />
         <StatCard label="Today's Surgeries" value={stats.todaySurgeries} />

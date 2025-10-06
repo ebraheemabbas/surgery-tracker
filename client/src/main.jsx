@@ -1,13 +1,16 @@
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import Dashboard from './pages/Dashboard.jsx';
+import NewPatient from './pages/NewPatient.jsx';
+import NewSurgery from './pages/NewSurgery.jsx';
+import Login from './pages/Login.jsx';
+import Signup from './pages/Signup.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
+import './styles.css';
+import { AuthProvider } from './context/AuthContext.jsx';
 
-import React from 'react'
-import { createRoot } from 'react-dom/client'
-import { BrowserRouter, Routes, Route, Link, useNavigate } from 'react-router-dom'
-import Dashboard from './pages/Dashboard.jsx'
-import NewPatient from './pages/NewPatient.jsx'
-import NewSurgery from './pages/NewSurgery.jsx'
-import './styles.css'
-
-function Layout({children}){
+function Layout({ children }) {
   return (
     <div className="container">
       <header className="topbar">
@@ -15,19 +18,48 @@ function Layout({children}){
       </header>
       <main>{children}</main>
     </div>
-  )
+  );
 }
 
-function App(){
+function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout><Dashboard/></Layout>} />
-        <Route path="/surgeries/new" element={<Layout><NewSurgery/></Layout>} />
-        <Route path="/patients/new" element={<Layout><NewPatient/></Layout>} />
-      </Routes>
-    </BrowserRouter>
-  )
+    // ✅ Provide Auth context globally
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* Public routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+
+          {/* Protected routes */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Layout><Dashboard /></Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/surgeries/new"
+            element={
+              <ProtectedRoute>
+                <Layout><NewSurgery /></Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/patients/new"
+            element={
+              <ProtectedRoute>
+                <Layout><NewPatient /></Layout>
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
+  );
 }
 
-createRoot(document.getElementById('root')).render(<App />)
+createRoot(document.getElementById('root')).render(<App />);

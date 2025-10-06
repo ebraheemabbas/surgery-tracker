@@ -4,12 +4,25 @@ import cors from "cors";
 import Database from "better-sqlite3";
 import { z } from "zod";
 
+import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
+import authRoutes from './authRoutes.js';
+import authRequired from './authRequired.js';
+
+dotenv.config();
+
+
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cors());
 app.use(express.json());
-
+app.use(cookieParser());
+app.use(cors({ origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173', credentials: true }));
+app.use('/api/auth', authRoutes);
+//app.use('/api/patients', authRequired, patientsRouter);
+//app.use('/api/surgeries', authRequired, surgeriesRouter);
+//app.use(cors());
 // --- DB setup ---
 const db = new Database("./db.sqlite");
 db.pragma("journal_mode = WAL");
