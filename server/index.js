@@ -121,6 +121,7 @@ const surgerySchema = z.object({
   datetime: z.string().min(1),
   durationMin: z.number().int().nonnegative().optional().nullable(),
   surgeon: z.string().optional().nullable(),
+  surgeonEmail: z.string().optional().nullable(),
   notes: z.string().optional().nullable()
 });
 
@@ -150,6 +151,7 @@ function mapSurgeryRow(row){
     datetime: row.datetime,
     durationMin: row.duration_min,
     surgeon: row.surgeon,
+    surgeonEmail: row.surgeonEmail,
     notes: row.notes,
     createdAt: row.created_at,
     updatedAt: row.updated_at
@@ -249,10 +251,11 @@ app.get("/api/surgeries", (req,res)=>{
   res.json({ data });
 });
 
-app.get("/api/surgeries/:id", (req,res)=>{
-  const row = db.prepare("SELECT * FROM surgeries WHERE id=?").get(req.params.id);
-  if (!row) return res.status(404).json({ error: "Not found" });
-  res.json({ data: mapSurgeryRow(row) });
+app.get("/api/surgeries/:surgeonEmail", (req,res)=>{
+  const rows = db.prepare("SELECT * FROM surgeries WHERE surgeonEmail=?").all(req.params.surgeonEmail);
+  if (!rows) return res.status(404).json({ error: req.params.surgeonEmail });
+  const data = rows.map(r => ({ ...mapSurgeryRow(r), patientName: `${r.first_name} ${r.last_name}` }));
+  res.json({ data });
 });
 
 app.post("/api/surgeries", (req,res)=>{
@@ -266,8 +269,8 @@ app.post("/api/surgeries", (req,res)=>{
   const id = `s_${Math.random().toString(36).slice(2,9)}`;
   const now = nowISO();
 db.prepare(`INSERT INTO surgeries (
-  id, title, patient_id, type, status, datetime, duration_min, surgeon, notes, created_at, updated_at
-) VALUES (?,?,?,?,?,?,?,?,?,?,?)`)
+  id, title, patient_id, type, status, datetime, duration_min, surgeon, surgeonEmail , notes, created_at, updated_at
+) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`)
   .run(
     id,
     s.title,
@@ -277,6 +280,7 @@ db.prepare(`INSERT INTO surgeries (
     s.datetime,
     s.durationMin ?? null,
     s.surgeon ?? null,
+    s.surgeonEmail ?? null,
     s.notes ?? null,
     now,
     now
