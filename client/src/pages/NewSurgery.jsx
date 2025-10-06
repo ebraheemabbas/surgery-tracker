@@ -2,13 +2,15 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../components/API'
+import { useAuth } from '../context/AuthContext'
 
 export default function NewSurgery(){
   const nav = useNavigate()
+  const { user, logout } = useAuth()
   const [patients, setPatients] = useState([])
   const [form, setForm] = useState({
     title:'', patientId:'', type:'emergency', status:'scheduled',
-    datetime: new Date().toISOString().slice(0,16), durationMin:'', surgeon:'', notes:''
+    datetime: new Date().toISOString().slice(0,16), durationMin:'', surgeon:user.email, surgeonEmail:user.email, notes:''
   })
   const [saving, setSaving] = useState(false)
   const [err, setErr] = useState(null)
@@ -73,10 +75,6 @@ export default function NewSurgery(){
         <div className="field">
           <label>Duration (min)</label>
           <input type="number" min={0} placeholder="e.g., 75" {...bind('durationMin')} />
-        </div>
-        <div className="field">
-          <label>Surgeon</label>
-          <input placeholder="Dr. Miller" {...bind('surgeon')} />
         </div>
         <div className="field" style={{gridColumn:'1 / -1'}}>
           <label>Notes</label>

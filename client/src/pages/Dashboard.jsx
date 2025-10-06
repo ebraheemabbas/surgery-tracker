@@ -8,6 +8,7 @@ import QuickActions from '../components/QuickActions'
 export default function Dashboard(){
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [surgeries, setSurgeries] = useState(null)
   const [error, setError] = useState(null)
 
   const { user, logout } = useAuth()
@@ -28,6 +29,10 @@ export default function Dashboard(){
     try{
       const res = await api('/api/stats')
       setStats(res.data)
+      if (user?.email) {
+      const res = await api(`/api/surgeries/${encodeURIComponent(user.email)}`)
+      setSurgeries(res.data) // array
+      }
     }catch(e){
       setError(String(e.message||e))
     }finally{
@@ -68,7 +73,7 @@ export default function Dashboard(){
         <div>
           <div className="section-title">Recent Surgeries</div>
           <div className="stack">
-            {stats.recent.map(s => (
+            {surgeries.map(s => (
               <div key={s.id} className="surgery-item">
                 <div className="surgery-title">{s.title}</div>
                 <div className="row" style={{marginBottom:8}}>
@@ -84,6 +89,7 @@ export default function Dashboard(){
             ))}
           </div>
         </div>
+        
         <QuickActions/>
       </div>
     </div>
